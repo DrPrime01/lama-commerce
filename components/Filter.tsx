@@ -1,6 +1,19 @@
-import React from "react";
+"use client";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function Filter() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    const params = new URLSearchParams(searchParams);
+    params.set(name, value);
+    replace(`${pathname}?${params.toString()}`);
+  };
   return (
     <div className="mt-12 flex justify-between">
       <div className="flex gap-6 flex-wrap">
@@ -8,6 +21,7 @@ function Filter() {
           name="type"
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
+          onChange={handleFilterChange}
         >
           <option value="type" defaultValue="type">
             Type
@@ -21,6 +35,7 @@ function Filter() {
           placeholder="min price"
           id=""
           className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
+          onChange={handleFilterChange}
         />
         <input
           type="text"
@@ -28,15 +43,14 @@ function Filter() {
           placeholder="max price"
           id=""
           className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
+          onChange={handleFilterChange}
         />
-        <select
+        {/* <select
           name="size"
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
         >
-          <option value="size" defaultValue="size">
-            Size
-          </option>
+          <option  value="size" defaultValue="size">Size</option>
           <option value="physical">Physical</option>
           <option value="digital">Digital</option>
         </select>
@@ -45,16 +59,15 @@ function Filter() {
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
         >
-          <option value="color" defaultValue="color">
-            Color
-          </option>
+          <option value="color" defaultValue="color">Color</option>
           <option value="physical">Physical</option>
           <option value="digital">Digital</option>
-        </select>
+        </select>*/}
         <select
           name="category"
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
+          onChange={handleFilterChange}
         >
           <option value="category" defaultValue="category">
             Category
@@ -66,6 +79,7 @@ function Filter() {
           name="all_filters"
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
+          onChange={handleFilterChange}
         >
           <option value="all" defaultValue="all">
             All Filters
@@ -79,14 +93,15 @@ function Filter() {
           name="sort"
           id=""
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#ebeded]"
+          onChange={handleFilterChange}
         >
           <option value="sort" defaultValue="sort">
             Sort By
           </option>
-          <option value="low_to_high">Price (low to high)</option>
-          <option value="high_to_low">Price (high to low)</option>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
+          <option value="asc price">Price (low to high)</option>
+          <option value="desc price">Price (high to low)</option>
+          <option value="asc lastUpdated">Newest</option>
+          <option value="desc lastUpdated">Oldest</option>
         </select>
       </div>
     </div>
