@@ -48,8 +48,6 @@ function CustomizeProduct({
     });
   };
 
-  console.log(selectedOption);
-
   return (
     <div className="flex flex-col gap-6">
       {options.map((option) => (

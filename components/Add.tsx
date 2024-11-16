@@ -1,4 +1,6 @@
 "use client";
+import { useCartStore } from "@/hooks/useCartStore";
+import { useWixClient } from "@/hooks/useWixClient";
 import { useState } from "react";
 
 function Add({
@@ -20,6 +22,11 @@ function Add({
       setQuantity((prev) => prev + 1);
     }
   };
+
+  const wixClient = useWixClient();
+
+  const { addItem, isLoading } = useCartStore();
+
   return (
     <div className="flex flex-col gap-4">
       <h4 className="font-medium">Choose quantity</h4>
@@ -46,7 +53,11 @@ function Add({
             <br /> Don&apos;t miss it!
           </p>
         </div>
-        <button className="rounded-3xl w-36 ring-1 ring-lama_red text-lama_red py-2 px-4 text-xs hover:bg-lama_red hover:text-white transition ease-in">
+        <button
+          onClick={() => addItem(wixClient, productId, variantId!, quantity)}
+          disabled={isLoading}
+          className="rounded-3xl w-36 ring-1 ring-lama_red text-lama_red py-2 px-4 text-xs hover:bg-lama_red hover:text-white transition ease-in"
+        >
           Add to Cart
         </button>
       </div>

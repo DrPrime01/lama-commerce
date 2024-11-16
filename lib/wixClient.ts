@@ -1,31 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use server";
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { products, collections } from "@wix/stores";
+import { OAuthStrategy, createClient } from "@wix/sdk";
+import { collections, products } from "@wix/stores";
+import { orders } from "@wix/ecom";
 import { cookies } from "next/headers";
+import { members } from "@wix/members";
 
-let refreshToken;
+export const wixClientServer = async () => {
+  let refreshToken;
 
-export async function wixClientServer() {
   try {
     const cookieStore = await cookies();
     refreshToken = JSON.parse(cookieStore.get("refreshToken")?.value || "{}");
-    const wixClient = createClient({
-      modules: {
-        products,
-        collections,
+  } catch (e) {}
+
+  const wixClient = createClient({
+    modules: {
+      products,
+      collections,
+      orders,
+      members,
+    },
+    auth: OAuthStrategy({
+      clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
+      tokens: {
+        refreshToken,
+        accessToken: { value: "", expiresAt: 0 },
       },
-      auth: OAuthStrategy({
-        clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
-        tokens: {
-          accessToken: {
-            value: "",
-            expiresAt: 0,
-          },
-          refreshToken,
-        },
-      }),
-    });
-    return wixClient;
-  } catch (error) {}
-}
+    }),
+  });
+
+  return wixClient;
+};

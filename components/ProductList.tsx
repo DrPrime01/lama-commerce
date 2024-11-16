@@ -11,27 +11,33 @@ const PRODUCT_PER_PAGE = 8;
 async function ProductList({
   categoryId,
   limit,
-  searchParams,
+  allSearchParams,
 }: {
   categoryId: string;
   limit?: number;
-  searchParams?: any;
+  allSearchParams?: any;
 }) {
-  const { type, min, max, sort, page } = await searchParams;
   const wixClient = await wixClientServer();
-  const productQuery = await wixClient!.products
+  const productQuery = wixClient!.products
     .queryProducts()
     // .startsWith("name", name)
-    .hasSome("productType", type ? [type] : ["physical", "digital"])
-    .gt("priceData.price", min || 0)
-    .lt("priceData.price", max || 999999)
+    .hasSome(
+      "productType",
+      allSearchParams?.type ? [allSearchParams?.type] : ["physical", "digital"]
+    )
+    .gt("priceData.price", allSearchParams?.min || 0)
+    .lt("priceData.price", allSearchParams?.max || 999999)
     .eq("collectionIds", `${categoryId}`)
     .limit(limit || PRODUCT_PER_PAGE)
-    .skip(page ? parseInt(page) * (limit || PRODUCT_PER_PAGE) : 0);
+    .skip(
+      allSearchParams?.page
+        ? parseInt(allSearchParams?.page) * (limit || PRODUCT_PER_PAGE)
+        : 0
+    );
   // .find();
 
-  if (sort) {
-    const [sortType, sortBy] = sort.split(" ");
+  if (allSearchParams?.sort) {
+    const [sortType, sortBy] = allSearchParams?.sort.split(" ");
 
     if (sortType === "asc") {
       productQuery.ascending(sortBy);
@@ -90,11 +96,13 @@ async function ProductList({
           </button>
         </Link>
       ))}
-      <Pagination
-        currentPage={res?.currentPage || 0}
-        hasPrev={res?.hasPrev()}
-        hasNext={res?.hasNext()}
-      />
+      {allSearchParams?.category ? (
+        <Pagination
+          currentPage={res?.currentPage || 0}
+          hasPrev={res?.hasPrev()}
+          hasNext={res?.hasNext()}
+        />
+      ) : null}
     </div>
   );
 }

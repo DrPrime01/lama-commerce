@@ -4,7 +4,16 @@ import { wixClientServer } from "@/lib/wixClient";
 import Image from "next/image";
 import { Suspense } from "react";
 
-async function page({ searchParams }: { searchParams: { category: string } }) {
+type SearchParams = {
+  category: string;
+  type?: string;
+  min?: number;
+  max?: number;
+  sort?: string;
+  page?: number;
+};
+
+async function page({ searchParams }: { searchParams: SearchParams }) {
   const wixClient = await wixClientServer();
   const { category } = await searchParams;
   const res = await wixClient!.collections.getCollectionBySlug(
@@ -39,7 +48,7 @@ async function page({ searchParams }: { searchParams: { category: string } }) {
             (res?.collection?._id as string) ||
             "00000000-000000-000000-000000000001"
           }
-          searchParams={searchParams}
+          allSearchParams={searchParams}
         />
       </Suspense>
     </div>
