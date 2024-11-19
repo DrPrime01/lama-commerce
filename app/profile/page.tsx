@@ -11,7 +11,14 @@ const ProfilePage = async () => {
     const isLoggedIn = await wixClient.auth.loggedIn();
 
     if (!isLoggedIn) {
-      return <div className="">Not logged in!</div>;
+      return (
+        <div className="flex gap-5 items-center justify-center h-[100px]">
+          <p>Not logged in!</p>
+          <Link href="/" className="underline">
+            Login
+          </Link>
+        </div>
+      );
     }
 
     const user = await wixClient?.members?.getCurrentMember({

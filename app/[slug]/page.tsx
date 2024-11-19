@@ -1,4 +1,3 @@
-import { PageProps } from "@/.next/types/app/[slug]/page";
 import Add from "@/components/Add";
 import CustomizeProduct from "@/components/CustomizeProduct";
 import ProductImages from "@/components/ProductImages";
@@ -7,7 +6,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { notFound } from "next/navigation";
 import React from "react";
 
-async function SinglePage({ params }: PageProps) {
+async function SinglePage({ params }: { params: { slug: string } }) {
   const wixClient = await wixClientServer();
   const { slug } = await params;
   const { items } = await wixClient!.products
