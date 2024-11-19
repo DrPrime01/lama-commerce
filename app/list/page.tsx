@@ -1,19 +1,11 @@
+import { PageProps } from "@/.next/types/app/list/page";
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import { wixClientServer } from "@/lib/wixClient";
 import Image from "next/image";
 import { Suspense } from "react";
 
-type SearchParams = {
-  category: string;
-  type?: string;
-  min?: number;
-  max?: number;
-  sort?: string;
-  page?: number;
-};
-
-async function page({ searchParams }: { searchParams: SearchParams }) {
+async function page({ searchParams }: PageProps) {
   const wixClient = await wixClientServer();
   const { category } = await searchParams;
   const res = await wixClient!.collections.getCollectionBySlug(

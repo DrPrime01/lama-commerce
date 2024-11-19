@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { PageProps } from "@/.next/types/app/orders/[id]/page";
 import { wixClientServer } from "@/lib/wixClient";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const OrderPage = async ({ params }: { params: { id: string } }) => {
+const OrderPage = async ({ params }: PageProps) => {
   const { id } = await params;
 
   const wixClient = await wixClientServer();
